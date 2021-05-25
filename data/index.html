@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="stylesheet.css" />
+    <link rel="stylesheet" href="toggleswitch.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      @media only screen and (max-width: 600px) {
+        body {
+          zoom: 0.7;
+          -ms-zoom: 0.7;
+          -webkit-zoom: 0.7;
+          -moz-transform: scale(0.7, 0.7);
+          -moz-transform-origin: left center;
+        }
+        .ct-chart-line {
+          width: 550px !important;
+        }
+      }
+    </style>
+  </head>
+  <body id="grad">
+    <div class="navbar">
+      <a href="#" style="padding-bottom: 3px; padding-top: 7px">
+        <img src="couch.svg" width="40px" height="40px" />
+      </a>
+      <a href="index.html" class="active">
+        <img style="float: left" src="control.svg" width="30px" height="30px" />
+        <p>STEUERUNG</p>
+      </a>
+      <a href="#">
+        <img style="float: left" src="light.svg" width="30px" height="30px" />
+        <p>LEDs</p>
+      </a>
+    </div>
+    <div class="flex-container">
+      <div class="full-size-widget" style="height: 500px">
+        <div class="label-header">
+          <div
+            style="
+              float: left;
+              margin-top: 12px;
+              margin-right: 20px;
+              height: 100%;
+              text-align: center;
+            "
+          ></div>
+        </div>
+        <table id="status" style="font-size: 20px; width: 100%; height: 440px">
+          <tr>
+            <td>LICHT VORNE</td>
+            <td style="text-align: center">
+              <label class="switch">
+                <input
+                  id="licht"
+                  type="checkbox"
+                  value="0"
+                  onclick="toggle('light')"
+                />
+                <span class="slider round"></span>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>REVERSE</td>
+            <td style="text-align: center">
+              <label class="switch">
+                <input
+                  id="reverse"
+                  type="checkbox"
+                  value="0"
+                  onclick="toggle('reverse')"
+                />
+                <span class="slider round"></span>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>BRUDA AUS DEM WEG</td>
+            <td style="text-align: center">
+              <label class="switch">
+                <input
+                  id="kompressor"
+                  type="checkbox"
+                  value="0"
+                  onclick="toggle('kompressor')"
+                />
+                <span class="slider round"></span>
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td>LOW SPEED</td>
+            <td style="text-align: center">
+              <label class="switch">
+                <input
+                  id="lowspeed"
+                  type="checkbox"
+                  value="0"
+                  onclick="toggle('lowspeed')"
+                />
+                <span class="slider round"></span>
+              </label>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+  <footer>
+    <div class="footer-div">
+      <p style="color: var(--text-color-light)">
+        &copy; Driving Sofa by Laurence & Erik
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    var updateInterval = 100;
+
+    var x = setInterval(function () {
+      loadData("states", updateData);
+    }, updateInterval);
+
+    function loadData(url, callback) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          callback.apply(xhttp);
+        }
+      };
+      xhttp.open("GET", url, true);
+      xhttp.send();
+    }
+
+    function updateData() {
+      var values = this.responseText.split(";");
+      if (values[0] == 0) {
+        document.getElementById("licht").checked = false;
+      } else {
+        document.getElementById("licht").checked = true;
+      }
+      if (values[1] == 0) {
+        document.getElementById("reverse").checked = false;
+      } else {
+        document.getElementById("reverse").checked = true;
+      }
+      if (values[2] == 0) {
+        document.getElementById("kompressor").checked = false;
+      } else {
+        document.getElementById("kompressor").checked = true;
+      }
+      if (values[3] == 0) {
+        document.getElementById("lowspeed").checked = false;
+      } else {
+        document.getElementById("lowspeed").checked = true;
+      }
+    }
+
+    function toggle(key) {
+      return new Promise((resolve) => {
+        var xhttp = new XMLHttpRequest();
+        var url = "toggle?" + key;
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            if (xhttp.responseText == "OK") {
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          }
+        };
+        xhttp.open("GET", url, true);
+        xhttp.send();
+      });
+    }
+  </script>
+</html>
