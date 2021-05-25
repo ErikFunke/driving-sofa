@@ -1,10 +1,10 @@
-#DRIVING SOFA CONTROLS
+# DRIVING SOFA CONTROLS
 
 Code for ESP8266 sofa WiFi remote controls. Four channel relay board and switches needed.
 
 ![alt text](sofa.jpg)
 
-##Sofa specs
+## Sofa specs
 
 - 2kw 48V BLDC Motor
 - 3,84 kWh Battery
